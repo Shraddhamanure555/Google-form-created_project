@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Google Form Replica with AJAX</title>
+    <style>
+        /* External CSS embedded here */
+        .background {
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif, sans-serif;
+            background-image: url('https://img.freepik.com/free-photo/white-flower-petals-with-water-drops-pollen_181624-27665.jpg?semt=ais_hybrid');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .color1 {
+            text-align: center;
+        }
+
+        .color1:hover {
+            color: rgb(255, 0, 157);
+            font-size: 45px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .color {
+            text-align: center;
+        }
+
+        .color:hover {
+            color: yellow;
+            cursor: pointer;
+            font-size: 30px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+    <script>
+        // JavaScript AJAX function for form submission
+        function submitForm() {
+            // Create a new XMLHttpRequest object
+            var xhr = new XMLHttpRequest();
+
+            // Collect form data
+            var name = document.getElementById("S1").value;
+            var phone = document.getElementById("S2").value;
+            var email = document.getElementsByName("myemail")[0].value;
+            var dob = document.getElementsByName("myDOB")[0].value;
+            var date = document.getElementsByName("date")[0].value;
+            var gender = document.querySelector('input[name="mygender"]:checked').value;
+            var terms = document.getElementsByName("myconditions")[0].checked ? "Accepted" : "Not Accepted";
+            var address = document.getElementsByName("myaddress")[0].value;
+            var department = document.getElementsByName("mydepartment")[0].value;
+
+            // Prepare data to send
+            var data = "myname=" + name + "&phonenumber=" + phone + "&myemail=" + email + 
+                "&myDOB=" + dob + "&date=" + date + "&mygender=" + gender + "&myconditions=" + terms + 
+                "&myaddress=" + address + "&mydepartment=" + department;
+
+            // Open a POST request to your Node.js backend
+            xhr.open("POST", "http://localhost:3000/submit", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            // Handle the server response
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Display the response in the response div
+                    document.getElementById("response").innerHTML = xhr.responseText;
+                }
+            };
+
+            // Send the request with the data
+            xhr.send(data);
+        }
+    </script>
+</head>
+<body>
+    <div class="background">
+        <h1 class="color1">HTML FORM</h1>
+        <h2 class="color">Welcome to Maharashtra</h2>
+        <br/>
+        <form onsubmit="event.preventDefault(); submitForm();">
+            <div id="N1">
+                <label for="S1">Name</label>
+                <input type="text" name="myname" id="S1" required>
+            </div>
+            <br/> 
+            <div id="p1">
+                <label for="S2">Phone Number</label>
+                <input type="text" name="phonenumber" id="S2" required>
+            </div>
+            <br/>
+            <div id="e1">
+                <label for="S3">Email</label>
+                <input type="email" name="myemail" required>
+            </div>
+            <br/>
+            <div id="N1">
+                <label for="DOB">Bonus</label>
+                <input type="number" name="myDOB" id="DOB">
+            </div>
+            <br/>
+            <div id="DT">
+                <label for="date">Date</label>
+                <input type="date" name="date" id="date">
+            </div>
+            <br/>
+            <div id="Gender">
+                <label>Gender: </label>
+                Female <input type="radio" name="mygender" value="Female"> 
+                Male <input type="radio" name="mygender" value="Male"> 
+                Other <input type="radio" name="mygender" value="Other">
+            </div>
+            <br/>
+            <div>
+                Accept the terms and conditions <input type="checkbox" name="myconditions">
+            </div>
+            <br/>
+            <div id="A1">
+                <label for="myaddress">Address:</label>
+                <textarea name="myaddress" cols="5" rows="5"></textarea>
+            </div>
+            <br/>
+            <div id="Department">
+                <div style="color: rgb(5, 7, 7); font-size: 16px;">
+                    Country:
+                    <select name="mydepartment">
+                        <option value="CSE-AI&DS" selected>AI&DS</option>
+                        <option value="CSE">CSE</option>
+                        <option value="E&TC">E&TC</option>
+                    </select>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <input type="submit" value="Submit Now">
+                <input type="reset" value="Reset">
+            </div>
+        </form> 
+
+        <!-- Div to display AJAX response -->
+        <div id="response"></div>
+    </div>
+</body>
+</html>
